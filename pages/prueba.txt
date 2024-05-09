@@ -1,0 +1,160 @@
+function getUrl(done){
+    //voy a buscar info a la api fake api
+    const results = fetch ('https://my-json-server.typicode.com/SEBASTIANULIBARRI/DiarioDigital/products')
+    console.log(results)
+
+    results.then(response => response.json())
+    .then(data=>{
+        done(data)
+    });
+}
+let botonBarras = document.querySelector(".barras");
+botonBarras.addEventListener("click", mostrarMenu);
+
+function mostrarMenu() {
+  document.querySelector("nav").classList.toggle("oculto");
+}
+
+getUrl(data=> {
+    data.forEach(element => {
+        console.log("ejemplo", element.title)
+    
+
+    //for (let i=0; i<2;i++){
+    /*elementos para crear la tarjeta*/ 
+        let img = document.createElement("img");
+        let div = document.createElement("div");
+        let a = document.createElement("a");
+        let p = document.createElement("p");
+        let precio = document.createElement("p");
+
+        p.innerHTML = element.title;
+        precio.innerHTML = "$" +  element.id*100;
+        img.classList.add("producto-img");
+        img.src=  element.url_img;
+        //agrego las clases para que se le aplique el formato especificado en css
+        div.classList.add("producto");
+        div.classList.add("p"+ element.id);
+        div.id=  element.id;
+        console.log(div);
+
+        div.appendChild(img);
+        console.log(div);
+        div.appendChild(p);
+        console.log(div);
+
+        div.appendChild(precio);
+        console.log(div);
+
+        a.appendChild(div);
+        console.log(a);
+
+        //a.href =  element.url_img;
+        console.log(a);//esto es para ver que tiene el a, no seria necesario.
+        document.getElementById("Container").appendChild(a);
+
+        var productos = document.querySelectorAll(".container>a");
+        productos.forEach((element)=>{
+            element.addEventListener('click',mostrar1)
+            element.addEventListener('doubleclick',mostrar)
+        })
+
+        console.log("PRODUCTOS ", productos)
+        
+        
+    });
+    }
+);
+
+
+function getUrlSpecific(done,id){
+ 
+    const results = fetch ('https://my-json-server.typicode.com/SEBASTIANULIBARRI/DiarioDigital/products/'+id)
+
+    results.then(response => response.json())
+    .then(data=>{
+        done(data)
+    });
+}
+
+
+
+
+
+
+ document.getElementById("button-back").addEventListener('click',ocultarProductoEspecifico);
+ function ocultarProductoEspecifico(event){
+    document.querySelector(".container").classList.remove("oculto");
+    document.querySelector(".muestra").classList.add("oculto");
+    let hijos = document.querySelector(".muestra").children;
+    console.log(hijos,hijos.length)
+    while (hijos.length>1)
+        hijos[1].remove();
+    console.log(hijos,hijos.length)
+
+    console.log("muestra", document.querySelector(".muestra").children);
+ }
+function mostrar1(event){
+console.log("TOQUE UN A",this.children[0].id)
+id = this.children[0].id;
+
+
+getUrlSpecific(data=> { 
+    let divMuestra  = document.querySelector(".muestra");
+
+    console.log(data)
+    let divContainer  = document.querySelector(".container");
+    divContainer.classList.add("oculto");
+    divMuestra.classList.remove("oculto");
+ 
+
+    
+
+    
+    /*elementos para crear la tarjeta*/ 
+        let img = document.createElement("img");
+        let div = document.createElement("div");
+        let div2 = document.createElement("div");
+        let a = document.createElement("a");
+        let titulo = document.createElement("p");
+        let descripcion = document.createElement("p");
+        let stock = document.createElement("p");
+        let precio = document.createElement("p");
+
+        titulo.innerHTML = data.title;
+        descripcion.innerHTML = data.descripcion;
+        stock.innerHTML = data.Stock;
+        precio.innerHTML = "$" +  data.precio;
+        img.classList.add("producto-img");
+        img.src=  data.url_img;
+        //agrego las clases para que se le aplique el formato especificado en css
+        div.classList.add("producto");
+        div.classList.add("p"+ data.id);
+        div.id=  data.id;
+
+        div.appendChild(img);
+        div2.appendChild(titulo);
+        div2.appendChild(descripcion);
+        div2.appendChild(stock);
+        div2.appendChild(precio);
+        div.appendChild(div2);
+        a.appendChild(div);
+        //a.href =  element.url_img;
+        console.log(a);//esto es para ver que tiene el a, no seria necesario.
+        divMuestra.appendChild(a);
+
+        
+        
+    },id);
+    }
+//);
+
+//}
+function mostrar(event){
+    console.log("FUNCION MOSTRAR");
+    let elemento = event.srcElement.id;
+    console.log("entre a la funcion",event.srcElement.id);
+    document.querySelector('#'+elemento).classList.add("PRUEBA");
+    
+
+}
